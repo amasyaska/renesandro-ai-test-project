@@ -22,3 +22,19 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('username', 'password', 'email')
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', instance.password)
+
+        instance.set_password(password)
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance
