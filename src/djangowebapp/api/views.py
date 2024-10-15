@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
 
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 from .serializers import RegisterSerializer
 
@@ -33,5 +33,18 @@ class LoginAPIView(APIView):
         user = JWT_authenticator.authenticate(request=request)[0]       # returns tuple
         if (user is not None):
             login(request, user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+
+class LogoutAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        JWT_authenticator = JWTAuthentication()
+        user = JWT_authenticator.authenticate(request=request)[0]
+        if (user is not None):
+            logout(request)
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
