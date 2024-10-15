@@ -12,6 +12,6 @@ class CustomUser(User):
 class Task(models.Model):
 
     name = models.CharField()
-    user = models.ForeignKey(CustomUser)
+    user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING)
     file = models.FileField(upload_to=content_file_name)
     prompt = models.CharField()
